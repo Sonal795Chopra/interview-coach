@@ -250,7 +250,7 @@ function ResearchingScreen({ company }) {
   useEffect(() => {
     const id = setInterval(() => setStep(s => Math.min(s + 1, steps.length - 1)), 2800)
     return () => clearInterval(id)
-  }, [])
+  }, [steps.length])
 
   return (
     <div className="min-h-screen bg-[#070d1a] flex items-center justify-center">
@@ -266,7 +266,7 @@ function ResearchingScreen({ company }) {
 }
 
 // ── Screen: Custom Questions ──────────────────────────────────────────────────
-function CustomQuestionsScreen({ research, onContinue, onSkip }) {
+function CustomQuestionsScreen({ onContinue, onSkip }) {
   const [cultureNotes, setCultureNotes] = useState('')
   const [customQs, setCustomQs] = useState([''])
 
@@ -523,7 +523,7 @@ function RecordingScreen({ question, questionNum, total, onSubmit, isSubmitting 
   const recognitionRef = useRef(null)
   const mediaRef = useRef(null)
   const timerRef = useRef(null)
-  const finalRef = useRef('')
+  const [finalTranscript, setFinalTranscript] = useState('')
 
   const hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition)
 
@@ -535,7 +535,7 @@ function RecordingScreen({ question, questionNum, total, onSubmit, isSubmitting 
 
   const startRecording = async () => {
     setTranscript('')
-    finalRef.current = ''
+    setFinalTranscript('')
     setTimer(0)
     setPermError(false)
 
@@ -551,7 +551,7 @@ function RecordingScreen({ question, questionNum, total, onSubmit, isSubmitting 
           if (e.results[i].isFinal) final += e.results[i][0].transcript + ' '
           else interim += e.results[i][0].transcript
         }
-        finalRef.current = final
+        setFinalTranscript(final)
         setTranscript(final + interim)
       }
       rec.onerror = () => setTextMode(true)
@@ -581,12 +581,12 @@ function RecordingScreen({ question, questionNum, total, onSubmit, isSubmitting 
   const reset = () => {
     setRecState('idle')
     setTranscript('')
+    setFinalTranscript('')
     setTimer(0)
-    finalRef.current = ''
   }
 
   const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
-  const finalText = (finalRef.current || transcript).trim()
+  const finalText = (finalTranscript || transcript).trim()
 
   return (
     <div className="min-h-screen bg-[#070d1a] px-4 py-12">
