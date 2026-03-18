@@ -3,7 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts'
 
 // ── Config ───────────────────────────────────────────────────────────────────
-const MODEL = 'claude-haiku-4-5'
+const MODEL = 'claude-haiku-4-5-20251001'
 
 function getClient() {
   const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
