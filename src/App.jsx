@@ -38,7 +38,8 @@ async function runWithWebSearch(system, userMessage, maxTokens = 1000) {
     )
 
     if (res.stop_reason === 'end_turn') {
-      return res.content.filter(b => b.type === 'text').map(b => b.text).join('\n')
+      const raw = res.content.filter(b => b.type === 'text').map(b => b.text).join('\n')
+      return raw.replace(/<cite[^>]*>([\s\S]*?)<\/cite>/g, '$1')
     }
     if (res.stop_reason === 'pause_turn') {
       messages = [...messages, { role: 'assistant', content: res.content }]
